@@ -5,22 +5,38 @@ const readline = require('readline');
 const fs = require('fs');
 const help = require('./lib/help');
 const templates = require('./templates');
+const mkdirp = require('mkdirp');
 
-const args = process.argv.slice(2);
 const program = process.argv[1].split("/").pop();
 
-if (!args[0]) {
-  console.log("You need specify a recuder name");
-  help(program);
+const opt = require('node-getopt');
+
+var args = opt.create([
+  ['r' , 'reducer=REDUCER+', 'Specify what reducer generate'],
+  ['a' , 'all', 'Generate all reducers (CRUD).'],
+  ['s' , 'state=REDUCER', 'Path to file with initial state (Check README.md)'],
+])
+.bindHelp()
+.parseSystem();
+
+if (args.options['all'] && args.options['reducer']) {
+  console.log("Please, specify only --all or --reducer.");
   return;
 }
 
 const reducersNames = {
-  actions: "reducers/actions",
-  constants: "reducers/constants",
-  reducers: "reducers/reducers",
-  states: "reducers/states",
+  actions: "actions",
+  constants: "constants",
+  reducers: "reducers",
+  states: "state",
 };
+
+const reducersSuffix = {
+  actions: "-actions",
+  constants: ".constants",
+  reducers: "",
+  states: "-state",
+}
 
 var reducersDir = {};
 
@@ -47,8 +63,12 @@ const scan_directory = function() {
 
 const make_reducers = function() {
   Object.keys(reducersDir).forEach(function(reducer) {
-    let file = `${reducersDir[reducer]}/${args[0]}.js`;
-    let data = templates[`${reducer}Template`]({name: args[0], directory: reducersDir});
+    let file = `${reducersDir[reducer]}/${args.argv[0]}${reducersSuffix[reducer]}.js`;
+    let data = templates[`${reducer}Template`]({name: args.argv[0], directory: reducersDir});
+    let file_path = file.split("/").pop();
+    mkdirp(file_path, function (err) {
+      if (err) console.error(err);
+    });
     fs.writeFile(file, data, function(err) {
       if (err) {
         console.log("Error");
