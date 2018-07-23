@@ -7,30 +7,22 @@ const add_reducer_import = function(name) {
 }
 
 const add_reducer_states = function(name) {
-  return `export function get${name.capitalize()}Request() {
+  return `export function ${name}AddRequest() {
   return {
-    type: GET_${name.toUpperCase()}_REQUEST,
+    type: ${name.toUpperCase()}_ADD_REQUEST,
   };
 }
 
-export function get${name.capitalize()}Failure(error) {
+export function ${name}AddSuccess() {
   return {
-    type: GET_${name.toUpperCase()}_FAILURE,
+    type: ${name.toUpperCase()}_ADD_SUCCESS,
+  };
+}
+
+export function ${name}AddFailure(error) {
+  return {
+    type: {name.toUpperCase()}_ADD_FAILURE,
     payload: error,
-  };
-}
-
-export function get${name.capitalize()}(sessionToken) {
-  return (dispatch) => {
-    dispatch(get${name.capitalize()}Request());
-    return authToken.getSessionToken(sessionToken)
-      .then(token => ${name}Request.init(token).get${name}())
-      .then((data) => {
-        dispatch(get${name.capitalize()}Success(data.${name}));
-      })
-      .catch((error) => {
-        dispatch(get${name.capitalize()}Failure(errorHandler(error)));
-      });
   };
 }`;
 }
