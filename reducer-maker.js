@@ -15,6 +15,7 @@ var args = opt.create([
   ['r' , 'reducer=REDUCER+', 'Specify what reducer generate'],
   ['a' , 'all', 'Generate all reducers (CRUD).'],
   ['s' , 'state=REDUCER', 'Path to file with initial state (Check README.md)'],
+  ['d', 'directory=DIR', "Path to reducers, if not found"]
 ])
 .bindHelp()
 .parseSystem();
@@ -22,6 +23,20 @@ var args = opt.create([
 if (args.options['all'] && args.options['reducer']) {
   console.log("Please, specify only --all or --reducer.");
   return;
+}
+
+if (args.options['all']) {
+  reducers = {
+    add: true,
+    read: true,
+    list: true,
+    update: true,
+    delete: true,
+  };
+}
+if (args.options['reducer']) {
+  reducers = {};
+  args.options['reducer'].forEach((elem) => reducers[elem] = true);
 }
 
 const reducersNames = {
@@ -53,8 +68,14 @@ const scan_directory = function() {
 
     // No reducer directory found
     if (ff_result.length == 0) {
-      console.log(`${reducer} not found\n`);
-      reducersDir[reducer] = reducer;
+      console.log(`${reducer} not found`);
+      if (args.options['directory']) {
+        console.log(`Directory setted to ${args.options['directory']}\n`);
+        reducersDir[reducer] = args.options['directory'] + `/${reducer}`;
+      } else {
+        console.log(`Directory setted to ${reducer}\n`);
+        reducersDir[reducer] = reducer;
+      }
     } else {
       reducersDir[reducer] = ff_result[0];
       console.log(`${reducer} found at '${ff_result}'\n`)
@@ -65,15 +86,17 @@ const scan_directory = function() {
 const make_reducers = function() {
   Object.keys(reducersDir).forEach(function(reducer) {
     let file = `${reducersDir[reducer]}/${args.argv[0]}${reducersSuffix[reducer]}.js`;
-    let data = templates[`${reducer}Template`]({name: args.argv[0], directory: reducersDir});
+    let data = templates[`${reducer}Template`]({name: args.argv[0], directory: reducersDir, reducers});
     let file_path = file.split("/");
     file_path.pop();
-    mkdirp(file_path[0], function (err) {
+    file_path = file_path.join("/");
+    mkdirp.sync(file_path, function (err) {
       if (err) console.error(err);
     });
     fs.writeFile(file, data, function(err) {
       if (err) {
-        console.log("Error");
+        console.error(`Error generating file ${file}`);
+        return;
       }
       console.log(`Created file ${file}`);
     });
