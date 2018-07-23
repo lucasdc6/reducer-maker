@@ -6,6 +6,7 @@ const fs = require('fs');
 const help = require('./lib/help');
 const templates = require('./templates');
 const mkdirp = require('mkdirp');
+const pluralize = require('pluralize');
 
 const program = process.argv[1].split("/").pop();
 
@@ -43,7 +44,7 @@ const reducersNames = {
   actions: "actions",
   constants: "constants",
   reducers: "reducers",
-  states: "state",
+  states: "states",
 };
 
 const reducersSuffix = {
@@ -85,8 +86,9 @@ const scan_directory = function() {
 
 const make_reducers = function() {
   Object.keys(reducersDir).forEach(function(reducer) {
-    let file = `${reducersDir[reducer]}/${args.argv[0]}${reducersSuffix[reducer]}.js`;
-    let data = templates[`${reducer}Template`]({name: args.argv[0], directory: reducersDir, reducers});
+    let reducerName = pluralize.plural(args.argv[0]);
+    let file = `${reducersDir[reducer]}/${reducerName}${reducersSuffix[reducer]}.js`;
+    let data = templates[`${reducer}Template`]({name: reducerName, directory: reducersDir, reducers});
     let file_path = file.split("/");
     file_path.pop();
     file_path = file_path.join("/");
