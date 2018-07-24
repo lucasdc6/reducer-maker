@@ -8,25 +8,18 @@ const templates = require('./templates');
 const mkdirp = require('mkdirp');
 const pluralize = require('pluralize');
 
-const program = process.argv[1].split("/").pop();
-
 const opt = require('node-getopt');
 
 var args = opt.create([
   ['r' , 'reducer=REDUCER+', 'Specify what reducer generate'],
-  ['a' , 'all', 'Generate all reducers (CRUD).'],
   ['s' , 'state=REDUCER', 'Path to file with initial state (Check README.md)'],
-  ['d', 'directory=DIR', "Path to reducers, if not found"]
+  ['d', 'directory=DIR', 'Path to reducers, if not found'],
+  ['f', 'force', 'Force the write.'],
 ])
 .bindHelp()
 .parseSystem();
 
-if (args.options['all'] && args.options['reducer']) {
-  console.log("Please, specify only --all or --reducer.");
-  return;
-}
-
-if (args.options['all']) {
+if (!args.options['reducer']) {
   reducers = {
     add: true,
     read: true,
@@ -34,8 +27,7 @@ if (args.options['all']) {
     update: true,
     delete: true,
   };
-}
-if (args.options['reducer']) {
+} else {
   reducers = {};
   args.options['reducer'].forEach((elem) => reducers[elem] = true);
 }
@@ -60,7 +52,7 @@ String.prototype.capitalize = function() {
   return this.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
 };
 
-const scan_directory = function() {
+const scanDirectory = function() {
   console.log("Scanning filesystem...\n");
   Object.keys(reducersNames).forEach(function(reducer, index) {
     console.log(`Searching ${reducer} directory`);
@@ -84,26 +76,34 @@ const scan_directory = function() {
   });
 }
 
-const make_reducers = function() {
+const makeReducers = function(reducerName) {
   Object.keys(reducersDir).forEach(function(reducer) {
-    let reducerName = pluralize.plural(args.argv[0]);
+    reducerName = pluralize.plural(reducerName);
     let file = `${reducersDir[reducer]}/${reducerName}${reducersSuffix[reducer]}.js`;
     let data = templates[`${reducer}Template`]({name: reducerName, directory: reducersDir, reducers});
     let file_path = file.split("/");
     file_path.pop();
     file_path = file_path.join("/");
-    mkdirp.sync(file_path, function (err) {
+    mkdirp(file_path, function (err) {
       if (err) console.error(err);
     });
-    fs.writeFile(file, data, function(err) {
-      if (err) {
-        console.error(`Error generating file ${file}`);
-        return;
-      }
-      console.log(`Created file ${file}`);
-    });
+    if (fs.existsSync(file) && !args.options['f']) {
+      throw new Error(`Reducers already exists (${file}) - You can force using the flag --force`)
+    } else {
+      fs.writeFile(file, data, function(err)   {
+        if (err) {
+          console.error(`Error generating file ${file}`);
+          return;
+        }
+        console.log(`Created file ${file}`);
+      });
+    }
   });
 }
 
-scan_directory();
-make_reducers();
+scanDirectory();
+try {
+  args.argv.forEach(makeReducers);
+} catch(err) {
+  console.log(err.message)
+}
