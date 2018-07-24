@@ -8,6 +8,13 @@ $ yarn global add reducer-maker
 $ npm intall -g reducer-maker
 ```
 
+__Note: remember to add yarn global to path__
+
+in your bashrc
+```bash
+export PATH="$PATH:$(yarn global bin)"
+```
+
 ## Generatig reducers
 
 - By default, reducer-maker genrate all (add, read, list, update and delete) in root directory.
