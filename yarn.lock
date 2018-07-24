@@ -84,12 +84,6 @@ node-getopt@^0.3.2:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/node-getopt/-/node-getopt-0.3.2.tgz#57507cd22f6f69650aa99252304a842f1224e44c"
 
-node-menu@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/node-menu/-/node-menu-1.3.0.tgz#1e421d58dda6a74abc6915650dc7abef15e33bbf"
-  dependencies:
-    underscore "1.6.0"
-
 once@^1.3.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/once/-/once-1.4.0.tgz#583b1aa775961d4b113ac17d9c50baef9dd76bd1"
@@ -103,10 +97,6 @@ path-is-absolute@^1.0.0:
 pluralize@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-7.0.0.tgz#298b89df8b93b0221dbf421ad2b1b1ea23fc6777"
-
-underscore@1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.6.0.tgz#8b38b10cacdef63337b8b24e4ff86d45aea529a8"
 
 wrappy@1:
   version "1.0.2"

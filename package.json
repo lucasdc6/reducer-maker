@@ -1,6 +1,6 @@
 {
   "name": "reducer-maker",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "reducer maker",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,12 +11,11 @@
     "code generator"
   ],
   "bin": {
-    "reduce-maker": "./reducer-maker.js"
+    "reducer-maker": "./reducer-maker.js"
   },
   "dependencies": {
     "node-find-folder": "^0.1.32",
     "pluralize": "^7.0.0",
-    "node-menu": "^1.3.0",
     "node-getopt": "^0.3.2",
     "mkdirp": "^0.5.1"
   },
