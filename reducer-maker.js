@@ -84,7 +84,7 @@ const makeReducers = function(reducerName) {
     let file_path = file.split("/");
     file_path.pop();
     file_path = file_path.join("/");
-    mkdirp(file_path, function (err) {
+    mkdirp.sync(file_path, function (err) {
       if (err) console.error(err);
     });
     if (fs.existsSync(file) && !args.options['f']) {
