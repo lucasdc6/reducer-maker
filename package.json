@@ -1,10 +1,18 @@
 {
   "name": "reducer-maker",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "reducer maker",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucasdc6/reducer-maker.git"
+  },
+  "bugs": {
+     "url": "https://github.com/lucasdc6/reducer-maker/issues"
+  },
+  "homepage": "https://github.com/lucasdc6/reducer-maker#readme",
   "keywords": [
     "redux",
     "reducer maker",
@@ -19,6 +27,6 @@
     "node-getopt": "^0.3.2",
     "mkdirp": "^0.5.1"
   },
-  "author": "lucasdc6",
+  "author": "lucasdc6 <lucasdicunzolo@gmail.com>",
   "license": "MIT"
 }
