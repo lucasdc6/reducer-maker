@@ -2,13 +2,17 @@
   "name": "reducer-maker",
   "version": "0.0.1",
   "description": "reducer maker",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [ "redux", "reducer maker", "code generator" ],
-  "bin": { "reduce-maker": "./reducer-maker" },
-  "main": "./reducer-maker",
+  "keywords": [
+    "redux",
+    "reducer maker",
+    "code generator"
+  ],
+  "bin": {
+    "reduce-maker": "./reducer-maker.js"
+  },
   "dependencies": {
     "node-find-folder": "^0.1.32",
     "pluralize": "^7.0.0",
