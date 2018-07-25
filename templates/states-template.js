@@ -9,7 +9,7 @@ module.exports = function(variables = {}) {
   var fields;
   if (state) {
     original = Object.keys(state).map ( field => `    ${field}: ${JSON.stringify(state[field])},`).join("\n");
-    fields = Object.keys(state).map( field => `    ${field}: null,\n    ${field}HasError: false,\n    ${field}ErrorMsg:"",`).join("\n");
+    fields = Object.keys(state).map( field => `    ${field}: ${JSON.stringify(state[field])},\n    ${field}HasError: false,\n    ${field}ErrorMsg:"",`).join("\n");
   }
 
   const data = state ?
