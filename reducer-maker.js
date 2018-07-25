@@ -23,7 +23,6 @@ var args = new getopt([
   ['', 'states-suffix=SUFFIX', 'Change states file suffix'],
 ]);
 
-
 args.setHelp(
   `Usage: node ${program} [OPTION]
 
@@ -38,11 +37,13 @@ Version: ${pjson.version}`
 .bindHelp()
 .parseSystem();
 
-if (args.options['example']) {
+// Check for flag '--examples'
+if (args.options['examples']) {
   console.log(`${process.cwd()}/examples`);
   process.exit(0);
 }
 
+// Check for reducers
 if (!args.options['reducer']) {
   reducers = {
     add: true,
@@ -56,14 +57,15 @@ if (!args.options['reducer']) {
   args.options['reducer'].forEach((elem) => reducers[elem] = true);
 }
 
+// Check for state file
+var stateFile = {};
 if (args.options['state']) {
   try {
-    var stateFile = fs.readFileSync(args.options['state'], { encoding: 'utf8'});
+    stateFile = fs.readFileSync(args.options['state'], { encoding: 'utf8'});
     stateFile = JSON.parse(stateFile);
   } catch(err) {
-    console.error(`Error: no such file or directory ${args.options['state']}`);
+    console.error(`Error: no such file or directory ${args.options['state']} - You can force using --force`);
     if (args.options['force']) {
-      stateFile = {}
       console.error("Set state by default\n");
     } else {
       process.exit(1);
@@ -71,6 +73,7 @@ if (args.options['state']) {
   }
 }
 
+// Check for workdir
 var workingdir = "";
 if (args.options['workingdir']) {
   workingdir = args.options['workingdir'];
@@ -85,6 +88,7 @@ if (args.options['workingdir']) {
   process.chdir(workingdir);
 }
 
+// Set initial reducersNames
 const reducersNames = {
   actions: workingdir,
   constants: workingdir,
@@ -92,6 +96,7 @@ const reducersNames = {
   states: workingdir,
 };
 
+// Set reducers suffixes
 const reducersSuffix = {
   actions: args.options['actions-suffix'] || "-actions",
   constants: args.options['constants-suffix'] || ".constants",
@@ -117,7 +122,7 @@ const scanDirectory = function() {
       console.log(`Directory setted to ${reducersNames[reducer]}\n`);
     } else {
       reducersNames[reducer] += ff_result[0];
-      console.log(`${reducer} found at '${reducersNames[reducer]}'\n`)
+      console.log(`${reducer} found at '${reducersNames[reducer]}'\n`);
     }
     reducersNames[reducer] += '/';
   });
@@ -125,14 +130,16 @@ const scanDirectory = function() {
 
 const makeReducers = function(reducerName) {
   Object.keys(reducersNames).forEach(function(reducer) {
+    let reducerDir = reducersNames[reducer].replace(workingdir, "");
 
     reducerName = pluralize.plural(reducerName);
     let fileName = `${reducerName}${reducersSuffix[reducer]}.js`;
-    let file = `${reducer}/${fileName}`;
+    let file = `${reducerDir}/${fileName}`;
     let state = stateFile[reducerName] ? stateFile[reducerName] : stateFile[pluralize.singular(reducerName)];
 
     let data = templates[`${reducer}Template`]({name: reducerName, directory: reducersNames, state, reducers});
-    mkdirp.sync(reducer, function (err) {
+
+    mkdirp.sync(reducerDir, function (err) {
       if (err) throw new Error(`Error creating directory ${reducersNames[reducer]}`);
     });
 
