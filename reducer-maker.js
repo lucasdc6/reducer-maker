@@ -4,22 +4,44 @@ const ff = require('node-find-folder');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
 const pluralize = require('pluralize');
-const opt = require('node-getopt');
+const getopt = require('node-getopt');
+const pjson = require('./package.json');
 
 const templates = require('./templates');
 
-var args = opt.create([
-  ['r' , 'reducer=REDUCER+', 'Specify what reducer generate'],
-  ['s' , 'state=REDUCER', 'Path to file with initial state (Check README.md)'],
-  ['f', 'force', 'Force the write.'],
-  ['', 'actions-suffix=SUFFIX', 'Change action file suffix.'],
-  ['', 'constants-suffix=SUFFIX', 'Change constants file suffix.'],
-  ['', 'reducers-suffix=SUFFIX', 'Change reducers file suffix.'],
-  ['', 'states-suffix=SUFFIX', 'Change states file suffix.'],
+const program = process.argv[1].split("/").pop();
+
+var args = new getopt([
+  ['r' , 'reducer=REDUCER+', 'Specify what reducer generate (CRUD)'],
+  ['s' , 'state=JSON', 'Path to file with initial state in json format'],
+  ['f', 'force', 'Force the execution'],
   ['w', 'workingdir=WD', 'Change working directory'],
-])
+  ['', 'examples', 'Show path to examples'],
+  ['', 'actions-suffix=SUFFIX', 'Change action file suffix'],
+  ['', 'constants-suffix=SUFFIX', 'Change constants file suffix'],
+  ['', 'reducers-suffix=SUFFIX', 'Change reducers file suffix'],
+  ['', 'states-suffix=SUFFIX', 'Change states file suffix'],
+]);
+
+
+args.setHelp(
+  `Usage: node ${program} [OPTION]
+
+[[OPTIONS]]
+
+Npm: https:\/\/www.npmjs.com/package/${pjson.name}
+Respository: ${pjson.homepage}
+License: ${pjson.license}
+
+Version: ${pjson.version}`
+)
 .bindHelp()
 .parseSystem();
+
+if (args.options['example']) {
+  console.log(`${process.cwd()}/examples`);
+  process.exit(0);
+}
 
 if (!args.options['reducer']) {
   reducers = {
@@ -107,8 +129,9 @@ const makeReducers = function(reducerName) {
     reducerName = pluralize.plural(reducerName);
     let fileName = `${reducerName}${reducersSuffix[reducer]}.js`;
     let file = `${reducer}/${fileName}`;
+    let state = stateFile[reducerName] ? stateFile[reducerName] : stateFile[pluralize.singular(reducerName)];
 
-    let data = templates[`${reducer}Template`]({name: reducerName, directory: reducersNames, state: stateFile[reducerName], reducers});
+    let data = templates[`${reducer}Template`]({name: reducerName, directory: reducersNames, state, reducers});
     mkdirp.sync(reducer, function (err) {
       if (err) throw new Error(`Error creating directory ${reducersNames[reducer]}`);
     });
