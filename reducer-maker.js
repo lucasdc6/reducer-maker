@@ -1,20 +1,22 @@
 #!/usr/bin/env node
 
 const ff = require('node-find-folder');
-const readline = require('readline');
 const fs = require('fs');
-const help = require('./lib/help');
-const templates = require('./templates');
 const mkdirp = require('mkdirp');
 const pluralize = require('pluralize');
-
 const opt = require('node-getopt');
+
+const templates = require('./templates');
 
 var args = opt.create([
   ['r' , 'reducer=REDUCER+', 'Specify what reducer generate'],
   ['s' , 'state=REDUCER', 'Path to file with initial state (Check README.md)'],
-  ['d', 'directory=DIR', 'Path to reducers, if not found'],
   ['f', 'force', 'Force the write.'],
+  ['', 'actions-suffix=SUFFIX', 'Change action file suffix.'],
+  ['', 'constants-suffix=SUFFIX', 'Change constants file suffix.'],
+  ['', 'reducers-suffix=SUFFIX', 'Change reducers file suffix.'],
+  ['', 'states-suffix=SUFFIX', 'Change states file suffix.'],
+  ['w', 'workingdir=WD', 'Change working directory'],
 ])
 .bindHelp()
 .parseSystem();
@@ -32,21 +34,33 @@ if (!args.options['reducer']) {
   args.options['reducer'].forEach((elem) => reducers[elem] = true);
 }
 
+var workingdir = "";
+if (args.options['workingdir']) {
+  workingdir = args.options['workingdir'];
+  if (workingdir.slice(-1) !== "/") {
+    workingdir += "/";
+  }
+  if (!fs.existsSync(workingdir)) {
+    mkdirp.sync(workingdir, function (err) {
+      if (err) console.error(err);
+    });
+  }
+  process.chdir(workingdir);
+}
+
 const reducersNames = {
-  actions: "actions",
-  constants: "constants",
-  reducers: "reducers",
-  states: "states",
+  actions: workingdir,
+  constants: workingdir,
+  reducers: workingdir,
+  states: workingdir,
 };
 
 const reducersSuffix = {
-  actions: "-actions",
-  constants: ".constants",
-  reducers: "",
-  states: "-state",
+  actions: args.options['actions-suffix'] || "-actions",
+  constants: args.options['constants-suffix'] || ".constants",
+  reducers: args.options['reducers-suffix'] || "",
+  states: args.options['states-suffix'] || "-state",
 }
-
-var reducersDir = {};
 
 String.prototype.capitalize = function() {
   return this.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
@@ -54,48 +68,45 @@ String.prototype.capitalize = function() {
 
 const scanDirectory = function() {
   console.log("Scanning filesystem...\n");
-  Object.keys(reducersNames).forEach(function(reducer, index) {
+  Object.keys(reducersNames).forEach(function(reducer) {
     console.log(`Searching ${reducer} directory`);
 
-    ff_result = new ff(reducersNames[reducer], { nottraversal: ['dist'] });
+    ff_result = new ff(reducer, { nottraversal: ['dist'] });
 
     // No reducer directory found
     if (ff_result.length == 0) {
       console.log(`${reducer} not found`);
-      if (args.options['directory']) {
-        console.log(`Directory setted to ${args.options['directory']}\n`);
-        reducersDir[reducer] = args.options['directory'] + `/${reducer}`;
-      } else {
-        console.log(`Directory setted to ${reducer}\n`);
-        reducersDir[reducer] = reducer;
-      }
+      reducersNames[reducer] += reducer;
+      console.log(`Directory setted to ${reducersNames[reducer]}\n`);
     } else {
-      reducersDir[reducer] = ff_result[0];
-      console.log(`${reducer} found at '${ff_result}'\n`)
+      reducersNames[reducer] += ff_result[0];
+      console.log(`${reducer} found at '${reducersNames[reducer]}'\n`)
     }
+    reducersNames[reducer] += '/';
   });
 }
 
 const makeReducers = function(reducerName) {
-  Object.keys(reducersDir).forEach(function(reducer) {
+  Object.keys(reducersNames).forEach(function(reducer) {
+
     reducerName = pluralize.plural(reducerName);
-    let file = `${reducersDir[reducer]}/${reducerName}${reducersSuffix[reducer]}.js`;
-    let data = templates[`${reducer}Template`]({name: reducerName, directory: reducersDir, reducers});
-    let file_path = file.split("/");
-    file_path.pop();
-    file_path = file_path.join("/");
-    mkdirp.sync(file_path, function (err) {
-      if (err) console.error(err);
+    let fileName = `${reducerName}${reducersSuffix[reducer]}.js`;
+    let file = `${reducer}/${fileName}`;
+
+    let data = templates[`${reducer}Template`]({name: reducerName, directory: reducersNames, reducers});
+    mkdirp.sync(reducer, function (err) {
+      if (err) throw new Error(`Error creating directory ${reducersNames[reducer]}`);
     });
+
     if (fs.existsSync(file) && !args.options['f']) {
       throw new Error(`Reducers already exists (${file}) - You can force using the flag --force`)
     } else {
       fs.writeFile(file, data, function(err)   {
         if (err) {
-          console.error(`Error generating file ${file}`);
+          console.error(`Error generating file ${file} - ${err}`);
           return;
         }
-        console.log(`Created file ${file}`);
+        console.log(`Created file ${reducersNames[reducer]}${fileName}`);
       });
     }
   });

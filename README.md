@@ -26,13 +26,13 @@ $ reducer-maker user
 - Generate all user's reducer in src directory.
 
 ```js
-$ reducer-maker -d src user
+$ reducer-maker -w src user
 ```
 
 - Generate only add and read user's reducers in src directory.
 
 ```js
-$ reducer-maker -r add -r read -d src user
+$ reducer-maker -r add -r read -w src user
 ```
 
 By default, reducer-maker shearch for a directory named `actions`, `constants`,
