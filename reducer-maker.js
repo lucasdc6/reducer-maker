@@ -34,6 +34,21 @@ if (!args.options['reducer']) {
   args.options['reducer'].forEach((elem) => reducers[elem] = true);
 }
 
+if (args.options['state']) {
+  try {
+    var stateFile = fs.readFileSync(args.options['state'], { encoding: 'utf8'});
+    stateFile = JSON.parse(stateFile);
+  } catch(err) {
+    console.error(`Error: no such file or directory ${args.options['state']}`);
+    if (args.options['force']) {
+      stateFile = {}
+      console.error("Set state by default\n");
+    } else {
+      process.exit(1);
+    }
+  }
+}
+
 var workingdir = "";
 if (args.options['workingdir']) {
   workingdir = args.options['workingdir'];
@@ -93,7 +108,7 @@ const makeReducers = function(reducerName) {
     let fileName = `${reducerName}${reducersSuffix[reducer]}.js`;
     let file = `${reducer}/${fileName}`;
 
-    let data = templates[`${reducer}Template`]({name: reducerName, directory: reducersNames, reducers});
+    let data = templates[`${reducer}Template`]({name: reducerName, directory: reducersNames, state: stateFile[reducerName], reducers});
     mkdirp.sync(reducer, function (err) {
       if (err) throw new Error(`Error creating directory ${reducersNames[reducer]}`);
     });
