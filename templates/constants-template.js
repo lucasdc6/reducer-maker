@@ -25,7 +25,7 @@ export const ${name.toUpperCase()}_DELETE_FAILURE = '${name}-delete-failure';`;
 }
 
 module.exports = function(variables = {}) {
-  const { name, directory, reducers } = variables;
+  const { name, reducers } = variables;
 
   const singularName = pluralize.singular(name);
   const pluralName = pluralize.plural(name);

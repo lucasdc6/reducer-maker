@@ -128,7 +128,7 @@ import {
   ${reducers['update']? update_reducer_import(singularName.toUpperCase()) : "// Update constants not generated"}
 
   ${reducers['delete']?delete_reducer_import(singularName.toUpperCase()) : "// Deleted constants not generated"}
-} from '${directory.constants}';
+} from '${directory}/constants';
 
 // Reducers change state's section
 ${reducers['add']? add_reducer_states(singularName) : "// Add reducer not generated"}

@@ -1,7 +1,7 @@
 const pluralize = require('pluralize');
 
 module.exports = function(variables = {}) {
-  const { name, directory, state } = variables;
+  const { name, state } = variables;
 
   const singularName = pluralize.singular(name);
   const pluralName = pluralize.plural(name);

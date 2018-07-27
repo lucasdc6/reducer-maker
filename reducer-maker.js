@@ -13,9 +13,11 @@ const program = process.argv[1].split("/").pop();
 
 var args = new getopt([
   ['r' , 'reducer=REDUCER+', 'Specify what reducer generate (CRUD)'],
+  ['', 'file=FILE+', 'Specify what file generate (actions, constants, reducers and states)'],
   ['s' , 'state=JSON', 'Path to file with initial state in json format'],
   ['f', 'force', 'Force the execution'],
   ['w', 'workingdir=WD', 'Change working directory'],
+  ['', 'root=ROOT', 'Specify root directory for requires/imports'],
   ['', 'examples', 'Show path to examples'],
   ['', 'actions-suffix=SUFFIX', 'Change action file suffix'],
   ['', 'constants-suffix=SUFFIX', 'Change constants file suffix'],
@@ -96,6 +98,13 @@ const reducersNames = {
   states: workingdir,
 };
 
+if (args.options['file']) {
+  let validFiles = Object.keys(reducersNames);
+  console.info(validFiles);
+  validFiles = validFiles.filter(reducerName => !args.options['file'].includes(reducerName));
+  validFiles.forEach(elem => delete reducersNames[elem]);
+}
+
 // Set reducers suffixes
 const reducersSuffix = {
   actions: args.options['actions-suffix'] || "-actions",
@@ -134,10 +143,15 @@ const makeReducers = function(reducerName) {
 
     reducerName = pluralize.plural(reducerName);
     let fileName = `${reducerName}${reducersSuffix[reducer]}.js`;
-    let file = `${reducerDir}/${fileName}`;
+    let file = `${reducerDir}${fileName}`;
     let state = stateFile[reducerName] ? stateFile[reducerName] : stateFile[pluralize.singular(reducerName)];
 
-    let data = templates[`${reducer}Template`]({name: reducerName, directory: reducersNames, state, reducers});
+    let data = templates[`${reducer}Template`]({
+      name: reducerName,
+      directory: args.options['root'] ? args.options['root'] : reducersNames,
+      state,
+      reducers,
+    });
 
     mkdirp.sync(reducerDir, function (err) {
       if (err) throw new Error(`Error creating directory ${reducersNames[reducer]}`);

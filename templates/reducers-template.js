@@ -169,9 +169,9 @@ import {
   ${reducers['delete']? delete_reducer_import(singularName.toUpperCase()) : "// Deleted constants not generated"}
 
   SET_STATE,
-} from '${directory.constants}';
+} from '${directory}/constants';
 
-import InitialState from '${directory.states}/${singularName}-state';
+import InitialState from '${directory}/states/${singularName}-state';
 
 // Main reducer function
 export default function ${name}Reducer(state = InitialState, action) {
