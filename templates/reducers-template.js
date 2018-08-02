@@ -189,17 +189,10 @@ export default function ${name}Reducer(state = InitialState, action) {
     case SET_STATE:
     {
       const {
-        ${name}
+        ${pluralName}
       } = JSON.parse(action.payload);
 
-      return {
-        ...state,
-        disabled: ${pluralName}.disabled,
-        error: ${pluralName}.disabled,
-        isValid: ${pluralName}.isValid,
-        isFetching: ${pluralName}.isFetching,
-        ${pluralName}: ${pluralName}.${pluralName}
-      };
+      return Object.assign({}, state, ${pluralName});
     }
 
     default:
