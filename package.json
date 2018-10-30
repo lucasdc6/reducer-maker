@@ -10,7 +10,7 @@
     "url": "git+https://github.com/lucasdc6/reducer-maker.git"
   },
   "bugs": {
-     "url": "https://github.com/lucasdc6/reducer-maker/issues"
+    "url": "https://github.com/lucasdc6/reducer-maker/issues"
   },
   "homepage": "https://github.com/lucasdc6/reducer-maker#readme",
   "keywords": [
@@ -22,10 +22,12 @@
     "reducer-maker": "./reducer-maker.js"
   },
   "dependencies": {
+    "lodash": "^4.17.11",
+    "mkdirp": "^0.5.1",
+    "mustache": "^3.0.0",
     "node-find-folder": "^0.1.32",
-    "pluralize": "^7.0.0",
     "node-getopt": "^0.3.2",
-    "mkdirp": "^0.5.1"
+    "pluralize": "^7.0.0"
   },
   "author": "lucasdc6 <lucasdicunzolo@gmail.com>",
   "license": "MIT"

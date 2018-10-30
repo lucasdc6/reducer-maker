@@ -1,0 +1,121 @@
+{{
+  ! reducerNamePluralU: Reducer name in plural and Uppercase
+  ! reducerNameSingularU: Reducer name in singular and Uppercase
+  ! reducerNameSingularC: Reducer name in singular and CamelCase
+  ! reducerNameSingularCC: Reducer name in singular, CamelCase and Capitalized
+  ! moduleNamePluralU: Module name in plural and Uppercase
+  ! moduleNamePluralC: Module name in plural and CamelCase
+  ! moduleNameSingularU: Module name in singular and Uppercase
+  ! moduleNameSingularC: Module name in singular, CamelCase  
+  ! moduleNameSingularCC: Module name in singular, CamelCase and Capitalized
+  ! moduleNamePluralCC: Module name in plural, CamelCase and Capitalized
+  ! directoryBase: Directory base for code 
+}}
+import {
+  actionRequest,
+  actionSuccess,
+  actionFailure
+} from '{{{directoryBase}}}helpers/action-dispatcher'
+
+import {
+  LIST_{{reducerNamePluralU}}_{{moduleNamePluralU}}_REQUEST,
+  LIST_{{reducerNamePluralU}}_{{moduleNamePluralU}}_SUCCESS,
+  LIST_{{reducerNamePluralU}}_{{moduleNamePluralU}}_FAILURE,
+
+  GET_{{reducerNameSingularU}}_{{moduleNameSingularU}}_REQUEST,
+  GET_{{reducerNameSingularU}}_{{moduleNameSingularU}}_SUCCESS,
+  GET_{{reducerNameSingularU}}_{{moduleNameSingularU}}_FAILURE,
+
+  {{reducerNameSingularU}}_{{moduleNameSingularU}}_ADD_REQUEST,
+  {{reducerNameSingularU}}_{{moduleNameSingularU}}_ADD_SUCCESS,
+  {{reducerNameSingularU}}_{{moduleNameSingularU}}_ADD_FAILURE,
+
+  {{reducerNameSingularU}}_{{moduleNameSingularU}}_UPDATE_REQUEST,
+  {{reducerNameSingularU}}_{{moduleNameSingularU}}_UPDATE_SUCCESS,
+  {{reducerNameSingularU}}_{{moduleNameSingularU}}_UPDATE_FAILURE,
+
+  {{reducerNameSingularU}}_{{moduleNameSingularU}}_DELETE_REQUEST,
+  {{reducerNameSingularU}}_{{moduleNameSingularU}}_DELETE_SUCCESS,
+  {{reducerNameSingularU}}_{{moduleNameSingularU}}_DELETE_FAILURE,
+} from '{{{directoryBase}}}constants'
+
+export function get{{reducerNameSingularCC}}{{moduleNamePluralCC}}(data, sessionToken) {
+  return dispatch => {
+    dispatch(actionRequest(LIST_{{reducerNamePluralU}}_{{moduleNamePluralU}}_REQUEST))
+    return authToken.storeSessionToken(sessionToken)
+      .then(token => {{reducerNamePluralU}}Request.init(token).get{{reducerNameSingularC}}{{reducerTypePluralC}}(data))
+      .then(data => {
+        dispatch(actionSuccess(LIST_{{reducerNamePluralU}}_{{moduleNamePluralU}}_SUCCESS, '{{reducerTypePluralC}}', data))
+      })
+      .catch(err => {
+        dispatch(actionFailure(LIST_{{reducerNamePluralU}}_{{moduleNamePluralU}}_FAILURE, errorHandler(err)))
+      })
+  }
+}
+
+export function get{{reducerNameSingularCC}}{{moduleNameSingularCC}}(data, sessionToken) {
+  return dispatch => {
+    dispatch(actionRequest(GET_{{reducerNameSingularU}}_{{moduleNameSingularU}}_REQUEST))
+    return authToken.storeSessionToken(sessionToken)
+      .then(token => {{reducerNamePluralU}}Request.init(token).get{{reducerNameSingularCC}}{{moduleNameSingularCC}}(data))
+      .then(data => {
+        dispatch(actionSuccess(GET_{{reducerNameSingularU}}_{{moduleNameSingularU}}_SUCCESS, '{{moduleNameSingularCC}}', data))
+      })
+      .catch(err => {
+        dispatch(actionFailure(GET_{{reducerNameSingularU}}_{{moduleNameSingularU}}_FAILURE, errorHandler(err)))
+      })
+  }
+}
+
+export function {{reducerNameSingularC}}{{moduleNameSingularCC}}Add(data, sessionToken) {
+  return dispatch => {
+    dispatch(actionRequest({{reducerNameSingularU}}_{{moduleNameSingularU}}_ADD_REQUEST))
+    return authToken.storeSessionToken(sessionToken)
+      .then(token => {{reducerNamePluralU}}Request.init(token).{{reducerNameSingularC}}{{moduleNameSingularCC}}Add(data))
+      .then(() => {
+        dispatch(actionSuccess({{reducerNameSingularU}}_{{moduleNameSingularU}}_ADD_SUCCESS))
+        dispatch(get{{reducerNameSingularC}}{{reducerTypePluralC}}(data))
+      })
+      .catch(err => {
+        dispatch(actionFailure({{reducerNameSingularU}}_{{moduleNameSingularU}}_ADD_FAILURE, errorHandler(err)))
+      })
+  }
+}
+
+export function {{reducerNameSingularC}}{{moduleNameSingularCC}}Update(data, sessionToken) {
+  return dispatch => {
+    dispatch(actionRequest({{reducerNameSingularU}}_{{moduleNameSingularU}}_UPDATE_REQUEST))
+    return authToken.storeSessionToken(sessionToken)
+      .then(token => {{reducerNamePluralU}}Request.init(token).{{reducerNameSingularC}}{{moduleNameSingularCC}}Update(data))
+      .then(() => {
+        dispatch(actionSuccess({{reducerNameSingularU}}_{{moduleNameSingularU}}_UPDATE_SUCCESS))
+        dispatch(get{{reducerNameSingularC}}{{reducerTypePluralC}}(data))
+      })
+      .catch(err => {
+        dispatch(actionFailure({{reducerNameSingularU}}_{{moduleNameSingularU}}_UPDATE_FAILURE, errorHandler(err)))
+      })
+  }
+}
+
+export function {{reducerNameSingularC}}{{moduleNameSingularCC}}Delete(data, sessionToken) {
+  return dispatch => {
+    dispatch(actionRequest({{reducerNameSingularU}}_{{moduleNameSingularU}}_DELETE_REQUEST))
+    return authToken.storeSessionToken(sessionToken)
+      .then(token => {{reducerNamePluralU}}Request.init(token).{{reducerNameSingularC}}{{moduleNameSingularCC}}Delete(data))
+      .then(() => {
+        dispatch(actionSuccess({{reducerNameSingularU}}_{{moduleNameSingularU}}_DELETE_SUCCESS))
+        dispatch(get{{reducerNameSingularC}}{{reducerTypePluralC}}(data))
+      })
+      .catch(err => {
+        dispatch(actionFailure({{reducerNameSingularU}}_{{moduleNameSingularU}}_DELETE_FAILURE, errorHandler(err)))
+      })
+  }
+}
+
+export default {
+  get{{reducerNameSingularCC}}{{moduleNamePluralCC}},
+  get{{reducerNameSingularCC}}{{moduleNameSingularCC}},
+  {{reducerNameSingularC}}{{moduleNameSingularCC}}Add,
+  {{reducerNameSingularC}}{{moduleNameSingularCC}}Update,
+  {{reducerNameSingularC}}{{moduleNameSingularCC}}Delete,
+}

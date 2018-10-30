@@ -1,0 +1,105 @@
+{{
+  ! reducerNamePluralU: Reducer name in plural and Uppercase
+  ! reducerNamePluralCC: Reducer name in plural, CamelCase and Capitalized
+  ! reducerNameSingularU: Reducer name in singular and Uppercase
+  ! reducerNameSingularC: Reducer name in singular and CamelCase
+  ! reducerNameSingularCC: Reducer name in singular, CamelCase and Capitalized
+  ! moduleNamePluralU: Module name in plural and Uppercase
+  ! moduleNamePluralC: Module name in plural and CamelCase
+  ! moduleNameSingularU: Module name in singular and Uppercase
+  ! moduleNameSingularC: Module name in singular, CamelCase  
+  ! moduleNameSingularCC: Module name in singular, CamelCase and Capitalized
+  ! moduleNamePluralCC: Module name in plural, CamelCase and Capitalized
+  ! directoryBase: Directory base for code 
+}}
+import initialState from '{{{directoryBase}}}states/{{reducerNameSingularC}}-state'
+
+export default function {{reducerNameSingularC}}Reducer(state = initialState, action) {
+  let next{{reducerNamePluralCC}}State = null
+
+  switch (true) {
+    case RegExp('.*{{reducerNameSingularC}}.*-request').test(action.type):
+    {
+      return {
+        ...state,
+        {{reducerNameSingularC}}: {
+          ...state.{{reducerNameSingularC}},
+          isFetching: true,
+          error: null,
+        }
+      }
+    }
+
+    case RegExp('.*{{reducerNameSingularC}}.*-add-success').test(action.type):
+    case RegExp('.*{{reducerNameSingularC}}.*-update-success').test(action.type):
+    case RegExp('.*{{reducerNameSingularC}}.*-delete-success').test(action.type):
+    {
+      return {
+        ...state,
+        {{reducerNameSingularC}}: {
+          ...state.{{reducerNameSingularC}},
+          isFetching: false,
+          success: true,
+        }
+      }
+    }
+
+    case RegExp('get-{{reducerNameSingularC}}.*-success').test(action.type):
+    {
+      const { name, data } = action.payload
+      const contextData = state.{{reducerNameSingularC}}[name]
+
+      return {
+        ...state,
+        {{reducerNameSingularC}}: {
+          ...state.{{reducerNameSingularC}},
+          isFetching: false,
+          [name]: {
+            ...contextData,
+            current: {
+              ...contextData.current,
+              ...data,
+            },
+            fields: {
+              ...contextData.fields,
+              ...data,
+            },
+          },
+        },
+      }
+    }
+
+
+    case RegExp('list-{{reducerNameSingularC}}.*-success').test(action.type):
+    {
+      const { name, data } = action.payload
+      const { collections } = state.{{reducerNameSingularC}}
+
+      return {
+        ...state,
+        {{reducerNameSingularC}}: {
+          ...state.{{reducerNameSingularC}},
+          isFetching: false,
+          collections: {
+            ...collections,
+            [name]: data,
+          }
+        }
+      }
+    }
+
+
+    case RegExp('.*{{reducerNameSingularC}}.*-failure').test(action.type):
+    {
+      return {
+        ...state,
+        {{reducerNameSingularC}}: {
+          ...state.{{reducerNameSingularC}},
+          isFetching: false,
+          error: action.payload,
+          success: null,
+        }
+      }
+    }
+  }
+}

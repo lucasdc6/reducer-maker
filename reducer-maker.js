@@ -6,8 +6,8 @@ const mkdirp = require('mkdirp');
 const pluralize = require('pluralize');
 const getopt = require('node-getopt');
 const pjson = require('./package.json');
-
-const templates = require('./templates');
+const _ = require('lodash');
+const Mustache = require('mustache');
 
 const program = process.argv[1].split("/").pop();
 
@@ -113,11 +113,7 @@ const reducersSuffix = {
   states: args.options['states-suffix'] || "-state",
 }
 
-String.prototype.capitalize = function() {
-  return this.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
-};
-
-const scanDirectory = function() {
+function scanDirectory() {
   console.log("Scanning filesystem...\n");
   Object.keys(reducersNames).forEach(function(reducer) {
     console.log(`Searching ${reducer} directory`);
@@ -137,36 +133,47 @@ const scanDirectory = function() {
   });
 }
 
-const makeReducers = function(reducerName) {
+function makeReducers(reducerFullName) {
   Object.keys(reducersNames).forEach(function(reducer) {
-    let reducerDir = reducersNames[reducer].replace(workingdir, "");
+    let reducerSplit = reducerFullName.split("/");
+    let reducerName = reducerSplit[0];
+    let moduleName = reducerSplit[1] ? reducerSplit[1] : reducerSplit[0] ;
+    let reducerDir = `${reducersNames[reducer].replace(workingdir, "")}${pluralize.plural(reducerName)}-${reducer}/`;
 
-    reducerName = pluralize.plural(reducerName);
-    let fileName = `${reducerName}${reducersSuffix[reducer]}.js`;
+    reducerFullName = pluralize.plural(reducerFullName);
+    let fileName = `${pluralize.plural(moduleName)}${reducersSuffix[reducer]}.js`;
     let file = `${reducerDir}${fileName}`;
-    let state = stateFile[reducerName] ? stateFile[reducerName] : stateFile[pluralize.singular(reducerName)];
+    let state = stateFile[reducerFullName] ? stateFile[reducerFullName] : stateFile[pluralize.singular(reducerFullName)];
 
-    let data = templates[`${reducer}Template`]({
-      name: reducerName,
-      directory: args.options['root'] ? args.options['root'] : reducersNames,
+    let data = {
+      reducerNamePluralU: pluralize.plural(reducerName).toUpperCase(),
+      reducerNameSingularU: pluralize.singular(reducerName).toUpperCase(),
+      reducerNameSingularC: _.camelCase(pluralize.singular(reducerName)),
+      reducerNameSingularCC: _.upperFirst(_.camelCase(pluralize.singular(reducerName))),
+      moduleNamePluralU: pluralize.plural(moduleName).toUpperCase(),
+      moduleNameSingularU: pluralize.singular(moduleName).toUpperCase(),
+      moduleNameSingularC: _.camelCase(pluralize.singular(moduleName)),
+      moduleNameSingularCC: _.upperFirst(_.camelCase(pluralize.singular(moduleName))),
+      moduleNamePluralC: _.camelCase(pluralize.plural(moduleName)),
+      moduleNamePluralCC: _.upperFirst(_.camelCase(pluralize.plural(moduleName))),
+      directoryBase: args.options['root'] ? args.options['root'] : reducersNames[reducer],
       state,
       reducers,
-    });
-
+    };
+    
     mkdirp.sync(reducerDir, function (err) {
       if (err) throw new Error(`Error creating directory ${reducersNames[reducer]}`);
     });
-
+    
     if (fs.existsSync(file) && !args.options['f']) {
       throw new Error(`Reducers already exists (${file}) - You can force using the flag --force`)
     } else {
-      fs.writeFile(file, data, function(err)   {
-        if (err) {
-          console.error(`Error generating file ${file} - ${err}`);
-          return;
-        }
-        console.log(`Created file ${reducersNames[reducer]}${fileName}`);
-      });
+      let template = fs.readFileSync(`templates/${reducer}`, 'utf8');
+
+      finalFile = Mustache.render(template, data);
+
+      fs.writeFileSync(file, finalFile);
+      console.log(`Created file ${reducersNames[reducer]}${fileName}`);
     }
   });
 }

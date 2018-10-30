@@ -1,0 +1,34 @@
+{{
+  ! reducerNamePluralU: Reducer name in plural and Uppercase
+  ! reducerNameSingularU: Reducer name in singular and Uppercase
+  ! reducerNameSingularC: Reducer name in singular and CamelCase
+  ! reducerNameSingularCC: Reducer name in singular, CamelCase and Capitalized
+  ! moduleNamePluralU: Module name in plural and Uppercase
+  ! moduleNamePluralC: Module name in plural and CamelCase
+  ! moduleNameSingularU: Module name in singular and Uppercase
+  ! moduleNameSingularC: Module name in singular, CamelCase  
+  ! moduleNameSingularCC: Module name in singular, CamelCase and Capitalized
+  ! moduleNamePluralCC: Module name in plural, CamelCase and Capitalized
+  ! directoryBase: Directory base for code 
+}}
+// {{reducerNameSingularCC}} {{moduleNameSingularCC}}
+
+export const LIST_{{reducerNameSingularU}}_{{moduleNamePluralU}}_REQUEST = 'list-{{reducerNameSingularC}}-{{moduleNamePluralC}}-request'
+export const LIST_{{reducerNameSingularU}}_{{moduleNamePluralU}}_SUCCESS = 'list-{{reducerNameSingularC}}-{{moduleNamePluralC}}-success'
+export const LIST_{{reducerNameSingularU}}_{{moduleNamePluralU}}_FAILURE = 'list-{{reducerNameSingularC}}-{{moduleNamePluralC}}-failure'
+
+export const GET_{{reducerNameSingularU}}_{{moduleNameSingularU}}_REQUEST = 'get-{{reducerNameSingularC}}-{{moduleNameSingularC}}-request'
+export const GET_{{reducerNameSingularU}}_{{moduleNameSingularU}}_SUCCESS = 'get-{{reducerNameSingularC}}-{{moduleNameSingularC}}-success'
+export const GET_{{reducerNameSingularU}}_{{moduleNameSingularU}}_FAILURE = 'get-{{reducerNameSingularC}}-{{moduleNameSingularC}}-failure'
+
+export const {{reducerNameSingularU}}_{{moduleNameSingularU}}_ADD_REQUEST = '{{reducerNameSingularC}}-{{moduleNameSingularC}}-add-request'
+export const {{reducerNameSingularU}}_{{moduleNameSingularU}}_ADD_SUCCESS = '{{reducerNameSingularC}}-{{moduleNameSingularC}}-add-success'
+export const {{reducerNameSingularU}}_{{moduleNameSingularU}}_ADD_FAILURE = '{{reducerNameSingularC}}-{{moduleNameSingularC}}-add-failure'
+
+export const {{reducerNameSingularU}}_{{moduleNameSingularU}}_UPDATE_REQUEST = '{{reducerNameSingularC}}-{{moduleNameSingularC}}-update-request'
+export const {{reducerNameSingularU}}_{{moduleNameSingularU}}_UPDATE_SUCCESS = '{{reducerNameSingularC}}-{{moduleNameSingularC}}-update-success'
+export const {{reducerNameSingularU}}_{{moduleNameSingularU}}_UPDATE_FAILURE = '{{reducerNameSingularC}}-{{moduleNameSingularC}}-update-failure'
+
+export const {{reducerNameSingularU}}_{{moduleNameSingularU}}_DELETE_REQUEST = '{{reducerNameSingularC}}-{{moduleNameSingularC}}-delete-request'
+export const {{reducerNameSingularU}}_{{moduleNameSingularU}}_DELETE_SUCCESS = '{{reducerNameSingularC}}-{{moduleNameSingularC}}-delete-success'
+export const {{reducerNameSingularU}}_{{moduleNameSingularU}}_DELETE_FAILURE = '{{reducerNameSingularC}}-{{moduleNameSingularC}}-delete-failure'

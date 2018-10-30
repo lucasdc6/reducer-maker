@@ -1,0 +1,21 @@
+{{
+  ! reducerNamePluralU: Reducer name in plural and Uppercase
+  ! reducerNameSingularU: Reducer name in singular and Uppercase
+  ! reducerNameSingularC: Reducer name in singular and CamelCase
+  ! reducerNameSingularCC: Reducer name in singular, CamelCase and Capitalized
+  ! moduleNamePluralU: Module name in plural and Uppercase
+  ! moduleNamePluralC: Module name in plural and CamelCase
+  ! moduleNameSingularU: Module name in singular and Uppercase
+  ! moduleNameSingularC: Module name in singular, CamelCase  
+  ! moduleNameSingularCC: Module name in singular, CamelCase and Capitalized
+  ! moduleNamePluralCC: Module name in plural, CamelCase and Capitalized
+  ! directoryBase: Directory base for code 
+}}
+export default {
+    isFetching: false,
+    isValid: false,
+    error: '',
+    success: '',
+    {{moduleNameSingularC}}: null,
+    {{moduleNamePluralC}}: null
+}
