@@ -10,6 +10,7 @@
   ! moduleNameSingularCC: Module name in singular, CamelCase and Capitalized
   ! moduleNamePluralCC: Module name in plural, CamelCase and Capitalized
   ! directoryBase: Directory base for code 
+  ! reducers
 }}
 import {
   actionRequest,
@@ -18,27 +19,54 @@ import {
 } from '{{{directoryBase}}}helpers/action-dispatcher'
 
 import {
+  {{#reducers.list}}
   LIST_{{reducerNamePluralU}}_{{moduleNamePluralU}}_REQUEST,
   LIST_{{reducerNamePluralU}}_{{moduleNamePluralU}}_SUCCESS,
   LIST_{{reducerNamePluralU}}_{{moduleNamePluralU}}_FAILURE,
+  {{/reducers.list}}
+  {{^reducers.list}}
+  // List {{reducerNameSingularCC}} {{moduleNamePluralCC}} not generated
+  {{/reducers.list}}
 
+  {{#reducers.read}}
   GET_{{reducerNameSingularU}}_{{moduleNameSingularU}}_REQUEST,
   GET_{{reducerNameSingularU}}_{{moduleNameSingularU}}_SUCCESS,
   GET_{{reducerNameSingularU}}_{{moduleNameSingularU}}_FAILURE,
+  {{/reducers.read}}
+  {{^reducers.read}}
+  // Get {{reducerNameSingularCC}} {{moduleNamePluralCC}} not generated
+  {{/reducers.read}}
 
+
+  {{#reducers.add}}
   {{reducerNameSingularU}}_{{moduleNameSingularU}}_ADD_REQUEST,
   {{reducerNameSingularU}}_{{moduleNameSingularU}}_ADD_SUCCESS,
   {{reducerNameSingularU}}_{{moduleNameSingularU}}_ADD_FAILURE,
+  {{/reducers.add}}
+  {{^reducers.add}}
+  // Add {{reducerNameSingularCC}} {{moduleNamePluralCC}} not generated
+  {{/reducers.add}}
 
+  {{#reducers.update}}
   {{reducerNameSingularU}}_{{moduleNameSingularU}}_UPDATE_REQUEST,
   {{reducerNameSingularU}}_{{moduleNameSingularU}}_UPDATE_SUCCESS,
   {{reducerNameSingularU}}_{{moduleNameSingularU}}_UPDATE_FAILURE,
+  {{/reducers.update}}
+  {{^reducers.update}}
+  // Update {{reducerNameSingularCC}} {{moduleNamePluralCC}} not generated
+  {{/reducers.update}}
 
+  {{#reducers.delete}}
   {{reducerNameSingularU}}_{{moduleNameSingularU}}_DELETE_REQUEST,
   {{reducerNameSingularU}}_{{moduleNameSingularU}}_DELETE_SUCCESS,
   {{reducerNameSingularU}}_{{moduleNameSingularU}}_DELETE_FAILURE,
+  {{/reducers.delete}}
+  {{^reducers.delete}}
+  // Delete {{reducerNameSingularCC}} {{moduleNamePluralCC}} not generated
+  {{/reducers.delete}}
 } from '{{{directoryBase}}}constants'
 
+{{#reducers.list}}
 export function get{{reducerNameSingularCC}}{{moduleNamePluralCC}}(data, sessionToken) {
   return dispatch => {
     dispatch(actionRequest(LIST_{{reducerNamePluralU}}_{{moduleNamePluralU}}_REQUEST))
@@ -52,7 +80,12 @@ export function get{{reducerNameSingularCC}}{{moduleNamePluralCC}}(data, session
       })
   }
 }
+{{/reducers.list}}
+{{^reducers.list}}
+// function get{{reducerNameSingularCC}}{{moduleNamePluralCC}} not generated
+{{/reducers.list}}
 
+{{#reducers.read}}
 export function get{{reducerNameSingularCC}}{{moduleNameSingularCC}}(data, sessionToken) {
   return dispatch => {
     dispatch(actionRequest(GET_{{reducerNameSingularU}}_{{moduleNameSingularU}}_REQUEST))
@@ -66,7 +99,12 @@ export function get{{reducerNameSingularCC}}{{moduleNameSingularCC}}(data, sessi
       })
   }
 }
+{{/reducers.read}}
+{{^reducers.read}}
+// function get{{reducerNameSingularCC}}{{moduleNameSingularCC}} not generated
+{{/reducers.read}}
 
+{{#reducers.add}}
 export function {{reducerNameSingularC}}{{moduleNameSingularCC}}Add(data, sessionToken) {
   return dispatch => {
     dispatch(actionRequest({{reducerNameSingularU}}_{{moduleNameSingularU}}_ADD_REQUEST))
@@ -81,7 +119,12 @@ export function {{reducerNameSingularC}}{{moduleNameSingularCC}}Add(data, sessio
       })
   }
 }
+{{/reducers.add}}
+{{^reducers.add}}
+// function {{reducerNameSingularC}}{{moduleNameSingularCC}}Add not generated
+{{/reducers.add}}
 
+{{#reducers.update}}
 export function {{reducerNameSingularC}}{{moduleNameSingularCC}}Update(data, sessionToken) {
   return dispatch => {
     dispatch(actionRequest({{reducerNameSingularU}}_{{moduleNameSingularU}}_UPDATE_REQUEST))
@@ -96,7 +139,12 @@ export function {{reducerNameSingularC}}{{moduleNameSingularCC}}Update(data, ses
       })
   }
 }
+{{/reducers.update}}
+{{^reducers.update}}
+// function {{reducerNameSingularC}}{{moduleNameSingularCC}}Update not generated
+{{/reducers.update}}
 
+{{#reducers.delete}}
 export function {{reducerNameSingularC}}{{moduleNameSingularCC}}Delete(data, sessionToken) {
   return dispatch => {
     dispatch(actionRequest({{reducerNameSingularU}}_{{moduleNameSingularU}}_DELETE_REQUEST))
@@ -111,11 +159,40 @@ export function {{reducerNameSingularC}}{{moduleNameSingularCC}}Delete(data, ses
       })
   }
 }
+{{/reducers.delete}}
+{{^reducers.delete}}
+// function {{reducerNameSingularC}}{{moduleNameSingularCC}}Delete not generated
+{{/reducers.delete}}
 
 export default {
+  {{#reducers.list}}
   get{{reducerNameSingularCC}}{{moduleNamePluralCC}},
+  {{/reducers.list}}
+  {{^reducers.list}}
+  // function get{{reducerNameSingularCC}}{{moduleNamePluralCC}} not generated
+  {{/reducers.list}}
+  {{#reducers.read}}
   get{{reducerNameSingularCC}}{{moduleNameSingularCC}},
+  {{/reducers.read}}
+  {{^reducers.read}}
+  // function get{{reducerNameSingularCC}}{{moduleNameSingularCC}} not generated
+  {{/reducers.read}}
+  {{#reducers.add}}
   {{reducerNameSingularC}}{{moduleNameSingularCC}}Add,
+  {{/reducers.add}}
+  {{^reducers.add}}
+  // function {{reducerNameSingularC}}{{moduleNameSingularCC}}Add not generated
+  {{/reducers.add}}
+  {{#reducers.update}}
   {{reducerNameSingularC}}{{moduleNameSingularCC}}Update,
+  {{/reducers.update}}
+  {{^reducers.update}}
+  // function {{reducerNameSingularC}}{{moduleNameSingularCC}}Update not generated
+  {{/reducers.update}}
+  {{#reducers.delete}}
   {{reducerNameSingularC}}{{moduleNameSingularCC}}Delete,
+  {{/reducers.delete}}
+  {{^reducers.delete}}
+  // function {{reducerNameSingularC}}{{moduleNameSingularCC}}Delete not generated
+  {{/reducers.delete}}
 }

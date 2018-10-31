@@ -10,25 +10,51 @@
   ! moduleNameSingularCC: Module name in singular, CamelCase and Capitalized
   ! moduleNamePluralCC: Module name in plural, CamelCase and Capitalized
   ! directoryBase: Directory base for code 
+  ! reducers
 }}
 // {{reducerNameSingularCC}} {{moduleNameSingularCC}}
 
+{{#reducers.list}}
 export const LIST_{{reducerNameSingularU}}_{{moduleNamePluralU}}_REQUEST = 'list-{{reducerNameSingularC}}-{{moduleNamePluralC}}-request'
 export const LIST_{{reducerNameSingularU}}_{{moduleNamePluralU}}_SUCCESS = 'list-{{reducerNameSingularC}}-{{moduleNamePluralC}}-success'
 export const LIST_{{reducerNameSingularU}}_{{moduleNamePluralU}}_FAILURE = 'list-{{reducerNameSingularC}}-{{moduleNamePluralC}}-failure'
+{{/reducers.list}}
+{{^reducers.list}}
+// List {{reducerNameSingularCC}} {{moduleNamePluralCC}} not generated
+{{/reducers.list}}
 
+{{#reducers.read}}
 export const GET_{{reducerNameSingularU}}_{{moduleNameSingularU}}_REQUEST = 'get-{{reducerNameSingularC}}-{{moduleNameSingularC}}-request'
 export const GET_{{reducerNameSingularU}}_{{moduleNameSingularU}}_SUCCESS = 'get-{{reducerNameSingularC}}-{{moduleNameSingularC}}-success'
 export const GET_{{reducerNameSingularU}}_{{moduleNameSingularU}}_FAILURE = 'get-{{reducerNameSingularC}}-{{moduleNameSingularC}}-failure'
+{{/reducers.read}}
+{{^reducers.read}}
+// Get {{reducerNameSingularCC}} {{moduleNamePluralCC}} not generated
+{{/reducers.read}}
 
+{{#reducers.add}}
 export const {{reducerNameSingularU}}_{{moduleNameSingularU}}_ADD_REQUEST = '{{reducerNameSingularC}}-{{moduleNameSingularC}}-add-request'
 export const {{reducerNameSingularU}}_{{moduleNameSingularU}}_ADD_SUCCESS = '{{reducerNameSingularC}}-{{moduleNameSingularC}}-add-success'
 export const {{reducerNameSingularU}}_{{moduleNameSingularU}}_ADD_FAILURE = '{{reducerNameSingularC}}-{{moduleNameSingularC}}-add-failure'
+{{/reducers.add}}
+{{^reducers.add}}
+// Add {{reducerNameSingularCC}} {{moduleNamePluralCC}} not generated
+{{/reducers.add}}
 
+{{#reducers.update}}
 export const {{reducerNameSingularU}}_{{moduleNameSingularU}}_UPDATE_REQUEST = '{{reducerNameSingularC}}-{{moduleNameSingularC}}-update-request'
 export const {{reducerNameSingularU}}_{{moduleNameSingularU}}_UPDATE_SUCCESS = '{{reducerNameSingularC}}-{{moduleNameSingularC}}-update-success'
 export const {{reducerNameSingularU}}_{{moduleNameSingularU}}_UPDATE_FAILURE = '{{reducerNameSingularC}}-{{moduleNameSingularC}}-update-failure'
+{{/reducers.update}}
+{{^reducers.update}}
+// Update {{reducerNameSingularCC}} {{moduleNamePluralCC}} not generated
+{{/reducers.update}}
 
+{{#reducers.remove}}
 export const {{reducerNameSingularU}}_{{moduleNameSingularU}}_DELETE_REQUEST = '{{reducerNameSingularC}}-{{moduleNameSingularC}}-delete-request'
 export const {{reducerNameSingularU}}_{{moduleNameSingularU}}_DELETE_SUCCESS = '{{reducerNameSingularC}}-{{moduleNameSingularC}}-delete-success'
 export const {{reducerNameSingularU}}_{{moduleNameSingularU}}_DELETE_FAILURE = '{{reducerNameSingularC}}-{{moduleNameSingularC}}-delete-failure'
+{{/reducers.remove}}
+{{^reducers.remove}}
+// Delete {{reducerNameSingularCC}} {{moduleNamePluralCC}} not generated
+{{/reducers.remove}}

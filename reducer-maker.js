@@ -15,6 +15,7 @@ var args = new getopt([
   ['r' , 'reducer=REDUCER+', 'Specify what reducer generate (CRUD)'],
   ['', 'file=FILE+', 'Specify what file generate (actions, constants, reducers and states)'],
   ['s' , 'state=JSON', 'Path to file with initial state in json format'],
+  ['i', 'inline-json=JSON', 'Specify inline json'],
   ['f', 'force', 'Force the execution'],
   ['w', 'workingdir=WD', 'Change working directory'],
   ['', 'root=ROOT', 'Specify root directory for requires/imports'],
@@ -39,6 +40,11 @@ Version: ${pjson.version}`
 .bindHelp()
 .parseSystem();
 
+if (args.options['state'] && args.options['inline-json']) {
+  console.error('You must specify --state or --inline-json, not both');
+  process.exit(1);
+}
+
 // Check for flag '--examples'
 if (args.options['examples']) {
   console.log(`${process.cwd()}/examples`);
@@ -60,18 +66,20 @@ if (!args.options['reducer']) {
 }
 
 // Check for state file
-var stateFile = {};
-if (args.options['state']) {
+var state = {};
+if (args.options['state'] || args.options['inline-json']) {
   try {
-    stateFile = fs.readFileSync(args.options['state'], { encoding: 'utf8'});
-    stateFile = JSON.parse(stateFile);
+    const stateFile = args.options['state'] ?
+                fs.readFileSync(args.options['state'], { encoding: 'utf8'}) :
+                args.options['inline-json'];
+
+    state = JSON.parse(stateFile);
   } catch(err) {
-    console.error(`Error: no such file or directory ${args.options['state']} - You can force using --force`);
-    if (args.options['force']) {
-      console.error("Set state by default\n");
-    } else {
-      process.exit(1);
-    }
+    console.error(`Error: can\'t set state - You can set default value using --force`);
+    
+    !args.options['force'] && process.exit(1);
+
+    console.error("Set state by default\n");
   }
 }
 
@@ -143,7 +151,7 @@ function makeReducers(reducerFullName) {
     reducerFullName = pluralize.plural(reducerFullName);
     let fileName = `${pluralize.plural(moduleName)}${reducersSuffix[reducer]}.js`;
     let file = `${reducerDir}${fileName}`;
-    let state = stateFile[reducerFullName] ? stateFile[reducerFullName] : stateFile[pluralize.singular(reducerFullName)];
+    let initState = state[reducerFullName] ? state[reducerFullName] : state[pluralize.singular(reducerFullName)];
 
     let indent = '      ';
     let data = {
@@ -158,8 +166,8 @@ function makeReducers(reducerFullName) {
       moduleNamePluralC: _.camelCase(pluralize.plural(moduleName)),
       moduleNamePluralCC: _.upperFirst(_.camelCase(pluralize.plural(moduleName))),
       directoryBase: args.options['root'] ? args.options['root'] : reducersNames[reducer],
-      state: Object.keys(state || {}).map ( field => `${indent}${field}: ${JSON.stringify(state[field])},`).join("\n"),
-      fields: Object.keys(state || {}).map( field => `${indent}${field}: ${JSON.stringify(state[field])},\n${indent}${field}HasError: false,\n${indent}${field}ErrorMsg:"",`).join("\n"),
+      state: Object.keys(initState || {}).map ( field => `${indent}${field}: ${JSON.stringify(initState[field])},`).join("\n"),
+      fields: Object.keys(initState || {}).map( field => `${indent}${field}: ${JSON.stringify(initState[field])},\n${indent}${field}HasError: false,\n${indent}${field}ErrorMsg:"",`).join("\n"),
       reducers,
     };
     
