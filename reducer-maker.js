@@ -145,6 +145,7 @@ function makeReducers(reducerFullName) {
     let file = `${reducerDir}${fileName}`;
     let state = stateFile[reducerFullName] ? stateFile[reducerFullName] : stateFile[pluralize.singular(reducerFullName)];
 
+    let indent = '      ';
     let data = {
       reducerNamePluralU: pluralize.plural(reducerName).toUpperCase(),
       reducerNameSingularU: pluralize.singular(reducerName).toUpperCase(),
@@ -157,7 +158,8 @@ function makeReducers(reducerFullName) {
       moduleNamePluralC: _.camelCase(pluralize.plural(moduleName)),
       moduleNamePluralCC: _.upperFirst(_.camelCase(pluralize.plural(moduleName))),
       directoryBase: args.options['root'] ? args.options['root'] : reducersNames[reducer],
-      state,
+      state: Object.keys(state || {}).map ( field => `${indent}${field}: ${JSON.stringify(state[field])},`).join("\n"),
+      fields: Object.keys(state || {}).map( field => `${indent}${field}: ${JSON.stringify(state[field])},\n${indent}${field}HasError: false,\n${indent}${field}ErrorMsg:"",`).join("\n"),
       reducers,
     };
     
